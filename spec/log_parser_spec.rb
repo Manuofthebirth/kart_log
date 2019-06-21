@@ -1,8 +1,7 @@
 require 'spec_helper'
 require 'pry-byebug'
 require 'log_parser'
-require 'lap'
-
+require 'race'
 
 describe LogParser do
   subject(:log) { LogParser.new(File.open('log/kart.log').read) } # for repeated test lines
@@ -14,7 +13,7 @@ describe LogParser do
   describe '#raw_log' do
     it 'returns the raw log text' do
       log_string = File.open('log/kart.log').read
-      binding.pry
+      # binding.pry
       expect(log.raw_log).to eq(log_string)
     end
   end
@@ -30,8 +29,8 @@ describe LogParser do
   end
 
   describe '#laps' do
-    it 'returns an array of laps' do
-      expect(log.laps[0]).to be_a(Lap)
+    it 'returns an array of laps from a Race' do
+      expect(log.laps[0]).to be_a(Race)
     end
   end
 end

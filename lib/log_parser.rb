@@ -12,6 +12,6 @@ class LogParser
 	end
 
 	def laps
-		lap_logs.map { |lap_log| Lap.new(lap_log) } # will return an array with each lap log
+		lap_logs.map { |lap_log| Race.new(lap_log) } # will return an array with each lap log
 	end
 end
