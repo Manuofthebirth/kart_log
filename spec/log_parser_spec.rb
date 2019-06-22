@@ -13,7 +13,7 @@ describe LogParser do
   describe '#raw_log' do
     it 'returns the raw log text' do
       log_string = File.open('log/kart.log').read
-      # binding.pry
+      binding.pry
       expect(log.raw_log).to eq(log_string)
     end
   end
