@@ -101,15 +101,20 @@ class Race
   end
 
   def avg_speed
-    speed_by_racers.each do |key, value|
-      value.each do |v|
+    speed_by_racers.each do |racer, speed|
+      lap_avgs = []
+      speed.each do |s|
         # turn speed strings to integer and divide by number of laps completed then convert it back
-        str = v.split('')
-        str.insert(2, ".")
-        v = str.join
-        puts v
+        speed_string = s.split('')
+        speed_string.delete_at(2)
+        s = speed_string.join
+        lap_avgs << s.to_i
+        s = lap_avgs.inject{ |sum, x| sum + x }
+        average_spd = s/lap_avgs.count
+        speed = average_spd.to_s
+        speed.insert(-4, ",")
       end
-      # puts "Racer #{key} had an average speed of #{value}"
+      puts "Racer #{racer} had an average speed of #{speed}"
     end
   end
 end
