@@ -19,12 +19,12 @@ class Race
   end
 
   def racer_positions
-    last_laps.sort_by { |x| x[0] } # last lap finish sorted by hour input
+    last_laps.sort_by { |x| x[0] } # last lap sorted by hour input
   end
 
-  def racer_stats # extract informations from the racers positions to an array of hashes
+  def racer_stats # extract informations from the racers last laps to an array of hashes
     racer_positions.map do |hour, code, name, laps|
-      { racer_name: name, racer_code: code, laps_completed: laps }
+      { hour_input: hour, racer_name: name, racer_code: code, laps_completed: laps }
     end
   end
 
@@ -35,6 +35,37 @@ class Race
       # puts "Racer Code: #{racer_stat[:racer_code]}"
       puts "Laps Completed: #{racer_stat[:laps_completed]}"
       puts ''
+    end
+  end
+
+  # Race Total Time 
+
+  def speed_stats # extract informations to an array of hashes
+    lap_stats.map do |hour, code, name, laps, laptime, avgspd|
+      { racer_name: name, racer_code: code, laptime: laptime, avgspd: avgspd}
+    end
+  end
+
+  def time_by_racers # lap times + laps avg speed from each racer
+    speed_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:laptime]}}
+  end  
+
+  def total_time
+    # convert time strings to integer and sum the values; convert it back to string
+    time_by_racers.each do |racer, time|
+      lap_times = []
+      time.each do |t|
+        time_string = t.split('')
+        time_string.delete_at(1)
+        time_string.delete_at(3)
+        t = time_string.join
+        lap_times << t.to_i
+        t = lap_times.inject{ |sum, x| sum + x }
+        time = t.to_s
+        time.insert(-6, ":")
+        time.insert(-4, ".") 
+      end
+      puts "Racer #{racer} had a total time of '#{time}' during the race."
     end
   end
 
@@ -69,37 +100,6 @@ class Race
     end
   end
 
-  # Bonus - Race Total Time 
-
-  def speed_stats # extract informations to an array of hashes
-    lap_stats.map do |hour, code, name, laps, laptime, avgspd|
-      { racer_name: name, racer_code: code, laptime: laptime, avgspd: avgspd}
-    end
-  end
-
-  def time_by_racers # lap times speed from each racer
-    speed_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:laptime]}}
-  end  
-
-  def total_time
-    # convert time strings to integer and sum the values; convert it back to string
-    time_by_racers.each do |racer, time|
-      lap_times = []
-      time.each do |t|
-        time_string = t.split('')
-        time_string.delete_at(1)
-        time_string.delete_at(3)
-        t = time_string.join
-        lap_times << t.to_i
-        t = lap_times.inject{ |sum, x| sum + x }
-        time = t.to_s
-        time.insert(-6, ":")
-        time.insert(-4, ".") 
-      end
-      puts "Racer #{racer} had a total time of '#{time}' during the race."
-    end
-  end
-
   # Bonus - Avg Speed
 
   def speed_by_racers # avg speed from each racer
@@ -125,8 +125,26 @@ class Race
 
   # Bonus - Time after Winner
 
+  def last_by_racers # last hour input from each racer
+    racer_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:hour_input]}}
+  end
 
+  def time_after_first
+    last_by_racers.each do |racer, time|
+      hour_inputs = []
+      time.each do |t|
+        time_string = t.split('')
+        time_string.delete_at(8)
+        time_string.delete_at(5)
+        time_string.delete_at(2)
+        t = time_string.join
+        hour_inputs << t.to_f
+        t = hour_inputs.inject { |x| x }
+        time = (t - 235217003)/1000
+      end
+      puts "Racer #{racer} took a total time of '#{time}' seconds to finish the race after the winner."
+    end
+  end
 end
 
-# Descobrir quanto tempo cada piloto chegou após o vencedor
 
