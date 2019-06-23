@@ -69,7 +69,7 @@ class Race
     end
   end
 
-  # Bonus - Avg Speed + Race Total Time 
+  # Bonus - Race Total Time 
 
   def speed_stats # extract informations to an array of hashes
     lap_stats.map do |hour, code, name, laps, laptime, avgspd|
@@ -81,30 +81,35 @@ class Race
     speed_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:laptime]}}
   end  
 
-  def time_to_int
-    # turn time strings to integer
-    int = []
-    time_by_racers.each do |key, value|
-      value.each do |v|
-        str = v.split('')
-        str.delete_at(1)
-        str.delete_at(3)
-        int = str.join
-        puts int.to_f
+  def total_time
+    # convert time strings to integer and sum the values; convert it back to string
+    time_by_racers.each do |racer, time|
+      lap_times = []
+      time.each do |t|
+        time_string = t.split('')
+        time_string.delete_at(1)
+        time_string.delete_at(3)
+        t = time_string.join
+        lap_times << t.to_i
+        t = lap_times.inject{ |sum, x| sum + x }
+        time = t.to_s
+        time.insert(-6, ":")
+        time.insert(-4, ".") 
       end
+      puts "Racer #{racer} had a total time of '#{time}' during the race."
     end
   end
-        # puts "Racer #{key} had a total time of #{int}"
+
+  # Bonus - Avg Speed
 
   def speed_by_racers # avg speed from each racer
     speed_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:avgspd]}}
   end
 
-  def avg_speed
+  def avg_speed # convert speed strings to integer and divide by number of occurences (laps); convert it back to string
     speed_by_racers.each do |racer, speed|
       lap_avgs = []
       speed.each do |s|
-        # turn speed strings to integer and divide by number of laps completed then convert it back
         speed_string = s.split('')
         speed_string.delete_at(2)
         s = speed_string.join
@@ -114,33 +119,14 @@ class Race
         speed = average_spd.to_s
         speed.insert(-4, ",")
       end
-      puts "Racer #{racer} had an average speed of #{speed}"
+      puts "Racer #{racer} had an average speed of #{speed} during the race."
     end
   end
+
+  # Bonus - Time after Winner
+
+
 end
 
-# Posição Chegada, Código Piloto, Nome Piloto, 
-# Qtde Voltas Completadas e Tempo Total de Prova.
-
-# A corrida termina quando o primeiro colocado completa 4 voltas
-
-# Bonus
-
-# Descobrir a melhor volta de cada piloto
-# Descobrir a melhor volta da corrida
-# Calcular a velocidade média de cada piloto durante toda corrida
 # Descobrir quanto tempo cada piloto chegou após o vencedor
 
-# Tempo Total de Prova
-
-# str1 = "1:02.852"
-
-# str2 = str1.split('')
-# str2.delete_at(1)
-# str2.delete_at(3)
-# str1 = str2.join
-
-# str2 = str1.split('')
-# str2.insert(-6, ":") 
-# str2.insert(-4, ".")
-# str1 = str2.join
