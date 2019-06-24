@@ -37,7 +37,7 @@ class Race
       puts "Laps Completed: #{racer_stat[:laps_completed]}"
       puts ''
     end
-    puts "Psst você pensou que o Rubinho seria o último, né? :P"
+    puts "=> Psst você pensou que o Rubinho seria o último, né? :P"
   end
 
   # Race Total Time 

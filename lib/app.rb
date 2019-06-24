@@ -12,32 +12,29 @@ class App
     loop do
       print_commands
       number = gets.chomp
-      action(number)
-      if number == '7'
+      puts "\nHere's what you're looking for:"
+      puts ''
+      command(number)
+      answer = gets.chomp.upcase
+      if answer == 'N'
         break
-      else
-        puts ''
-        puts "Here's what you're looking for:"
-        puts ''
       end
+      repeat(answer)
     end
-    puts "Bye bye!"
   end
 
-  def print_commands
-  	puts "\n**********************************************************"
-    puts "Welcome to the Kart Log challenge! What do you want to do?"
-    puts "1 - Race positions"
+  def print_commands # available commands
+  	puts "\n***************************************"
+    puts "1 - Racer's positions"
     puts "2 - Racer's total time"
     puts "3 - Racer's best laps"
-    puts "4 - Race best lap"
-    puts "5 - Racer's average speed in the race"
-    puts "6 - Racer's race time after winner"
-    puts "7 - Exit"
-    puts '**********************************************************'
+    puts "4 - Race's best lap"
+    puts "5 - Racer's average speed"
+    puts "6 - Racer's time after winner"
+    puts '***************************************'
   end
 
-  def action(number)
+  def command(number) # Race class methods
   	case number
   	when "1" then puts @race.results
     when "2" then puts @race.total_time
@@ -45,8 +42,13 @@ class App
     when "4" then puts @race.best_lap 
     when "5" then puts @race.avg_speed
     when "6" then puts @race.time_after_winner
-  	else
-  	  puts "Wrong action"
+    else
+  	  puts "\nBzzt! Wrong command!"
   	end
+    puts "\nContinue? Type N if you want to exit."
+  end
+
+  def repeat(answer) # restart loop
+    puts "What do you want to do?"
   end
 end
