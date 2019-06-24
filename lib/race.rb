@@ -10,6 +10,7 @@ class Race
   def lap_stats 
     # extracting each information from a lap to an array
     # hour input, racer code, racer name, lap #, lap time and average speed
+    laps_info = File.open('log/kart.log').read
     laps_info.scan(/^(?<hourinput>\d\S+)\s+(?<code>\d+)\s–\s(?<racer>\w\S+)\s+(?<lap#>\d)\s+(?<laptime>\d\S+)\s+(?<avgspeed>\d\S+)/)
   end
 
@@ -36,6 +37,7 @@ class Race
       puts "Laps Completed: #{racer_stat[:laps_completed]}"
       puts ''
     end
+    puts "=> Psst você pensou que o Rubinho seria o último, né? :P"
   end
 
   # Race Total Time 
@@ -66,6 +68,7 @@ class Race
         time.insert(-4, ".") 
       end
       puts "Racer #{racer} had a total time of '#{time}' during the race."
+      puts ''
     end
   end
 
@@ -73,6 +76,7 @@ class Race
 
   def best_laps # lap times ordered from best to worst
     # racer code, racer name, lap #, lap time
+    laps_info = File.open('log/kart.log').read
     laps_info.scan(/^\d\S+\s+(?<code>\d+)\s–\s(?<racer>\w\S+)\s+(?<lap#>\d)\s+(?<laptime>\d\S+)/).sort_by { |x| x[3] }
   end
 
@@ -120,6 +124,7 @@ class Race
         speed.insert(-4, ",")
       end
       puts "Racer #{racer} had an average speed of #{speed} during the race."
+      puts ''
     end
   end
 
@@ -129,7 +134,7 @@ class Race
     racer_stats.group_by{|h| h[:racer_name]}.each{|_, v| v.map!{|h| h[:hour_input]}}
   end
 
-  def time_after_first
+  def time_after_winner # convert string to floats then subtract by winner's last hour input
     last_by_racers.each do |racer, time|
       hour_inputs = []
       time.each do |t|
@@ -143,6 +148,7 @@ class Race
         time = (t - 235217003)/1000
       end
       puts "Racer #{racer} took a total time of '#{time}' seconds to finish the race after the winner."
+      puts ''
     end
   end
 end
